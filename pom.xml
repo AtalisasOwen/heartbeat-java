@@ -7,6 +7,28 @@
     <groupId>io.atalisasowen</groupId>
     <artifactId>heartbeat-java</artifactId>
     <version>0.0.1</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
+    <dependencies>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId> <!-- Use 'netty-all' for 4.0 or above -->
+            <version>4.1.52.Final</version>
+            <scope>compile</scope>
+        </dependency>
+
+    </dependencies>
 
 </project>
