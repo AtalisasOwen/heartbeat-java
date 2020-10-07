@@ -75,7 +75,9 @@ public class HeartBeatCommand {
     @Override
     public String toString() {
         return "HeartBeatCommand{" +
-                "commandName='" + commandName + '\'' +
+                "srcAddr=" + srcAddr +
+                ", dstAddr=" + dstAddr +
+                ", commandName='" + commandName + '\'' +
                 ", commandUuid='" + commandUuid + '\'' +
                 '}';
     }

@@ -1,12 +1,8 @@
 package io.atalisasowen.heartbeat;
 
-import io.atalisasowen.heartbeat.command.HeartBeatCommand;
 import io.atalisasowen.heartbeat.network.HeartBeatServer;
-import io.atalisasowen.heartbeat.network.udp.HeartBeatUdpSender;
-import io.atalisasowen.heartbeat.store.SimplePingStore;
 
 import java.net.InetSocketAddress;
-import java.util.UUID;
 
 public class HeartBeatPeer2 {
 

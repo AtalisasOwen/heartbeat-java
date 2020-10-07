@@ -20,16 +20,13 @@ public class HeartBeatPeer {
         Runnable senderThread = () -> {
             try {
                 System.out.println("Starting Sending Thread...");
-                Thread.sleep(1000);
-                String key1 = UUID.randomUUID().toString();
-                HeartBeatCommand command1 = new HeartBeatCommand(address1, address2, "PING", key1);
-                SimplePingStore.PING_COMMANDS.put(key1, command1);
-                SimplePingStore.SENDING_QUEUE.offer(command1);
-                Thread.sleep(1000);
-                String key2 = UUID.randomUUID().toString();
-                HeartBeatCommand command2 = new HeartBeatCommand(address1, address2, "PING", key2, "FUUU".getBytes());
-                SimplePingStore.PING_COMMANDS.put(key2, command2);
-                SimplePingStore.SENDING_QUEUE.offer(command2);
+                for (;;){
+                    String uuid = UUID.randomUUID().toString();
+                    HeartBeatCommand command = new HeartBeatCommand(address1, address2, "PING", uuid);
+                    SimplePingStore.PING_COMMANDS.put(uuid, command);
+                    SimplePingStore.SENDING_QUEUE.offer(command);
+                    Thread.sleep(1000);
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -37,7 +34,7 @@ public class HeartBeatPeer {
 
         new Thread(senderThread).start();
 
-        HeartBeatServer server = new HeartBeatServer(address1, address2);
+        HeartBeatServer server = new HeartBeatServer(address1);
         server.run();
 
     }

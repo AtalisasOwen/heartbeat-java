@@ -24,7 +24,7 @@ public class HeartBeatUdpReceiver {
                     protected void initChannel(Channel channel) throws Exception {
                         ChannelPipeline pipeline = channel.pipeline();
                         pipeline.addLast(new HeartBeatUdpDecoder());
-                        pipeline.addLast(new HeartBeatHandler());
+                        pipeline.addLast(new HeartBeatHandler(address));
                     }
                 }).localAddress(address);
     }
