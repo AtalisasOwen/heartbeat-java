@@ -1,37 +1,51 @@
 package io.atalisasowen.heartbeat.command;
 
 import java.net.InetSocketAddress;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class HeartBeatCommand {
     public static final byte SEPARATOR = (byte)':';
-    private InetSocketAddress source;
+    private InetSocketAddress srcAddr;
+    private InetSocketAddress dstAddr;
     private String commandName;
     private String commandUuid;
     private byte[] data;
 
-    public HeartBeatCommand(InetSocketAddress source) {
-        this.source = source;
+    public HeartBeatCommand(InetSocketAddress srcAddr, InetSocketAddress dstAddr) {
+        this.srcAddr = srcAddr;
+        this.dstAddr = dstAddr;
     }
 
-    public HeartBeatCommand(InetSocketAddress source, String commandName, String commandUuid) {
-        this.source = source;
+    public HeartBeatCommand(InetSocketAddress srcAddr,InetSocketAddress dstAddr, String commandName, String commandUuid) {
+        this.srcAddr = srcAddr;
+        this.dstAddr = dstAddr;
         this.commandName = commandName;
         this.commandUuid = commandUuid;
     }
 
-    public HeartBeatCommand(InetSocketAddress source, String commandName, String commandUuid, byte[] data) {
-        this.source = source;
+    public HeartBeatCommand(InetSocketAddress srcAddr, InetSocketAddress dstAddr, String commandName, String commandUuid, byte[] data) {
+        this.srcAddr = srcAddr;
+        this.dstAddr = dstAddr;
         this.commandName = commandName;
         this.commandUuid = commandUuid;
         this.data = data;
     }
 
-    public InetSocketAddress getSource() {
-        return source;
+    public InetSocketAddress getSrcAddr() {
+        return srcAddr;
     }
 
-    public void setSource(InetSocketAddress source) {
-        this.source = source;
+    public void setSrcAddr(InetSocketAddress srcAddr) {
+        this.srcAddr = srcAddr;
+    }
+
+    public InetSocketAddress getDstAddr() {
+        return dstAddr;
+    }
+
+    public void setDstAddr(InetSocketAddress dstAddr) {
+        this.dstAddr = dstAddr;
     }
 
     public String getCommandName() {
@@ -64,5 +78,24 @@ public class HeartBeatCommand {
                 "commandName='" + commandName + '\'' +
                 ", commandUuid='" + commandUuid + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HeartBeatCommand command = (HeartBeatCommand) o;
+        return Objects.equals(srcAddr, command.srcAddr) &&
+                Objects.equals(dstAddr, command.dstAddr) &&
+                commandName.equals(command.commandName) &&
+                commandUuid.equals(command.commandUuid) &&
+                Arrays.equals(data, command.data);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(srcAddr, dstAddr, commandName, commandUuid);
+        result = 31 * result + Arrays.hashCode(data);
+        return result;
     }
 }

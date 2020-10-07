@@ -1,7 +1,7 @@
-package io.atalisasowen.heartbeat.network.p2p;
+package io.atalisasowen.heartbeat.network.udp;
 
-import io.atalisasowen.heartbeat.command.HeartBeatCommandHandler;
-import io.atalisasowen.heartbeat.network.HeartBeatDecoder;
+import io.atalisasowen.heartbeat.command.HeartBeatHandler;
+import io.atalisasowen.heartbeat.codec.HeartBeatUdpDecoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -9,11 +9,11 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
 
 import java.net.InetSocketAddress;
 
-public class HeartBeatReceiver {
+public class HeartBeatUdpReceiver {
     private final EventLoopGroup group;
     private final Bootstrap bootstrap;
 
-    public HeartBeatReceiver(InetSocketAddress address){
+    public HeartBeatUdpReceiver(InetSocketAddress address){
         group = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
         bootstrap.group(group)
@@ -23,8 +23,8 @@ public class HeartBeatReceiver {
                     @Override
                     protected void initChannel(Channel channel) throws Exception {
                         ChannelPipeline pipeline = channel.pipeline();
-                        pipeline.addLast(new HeartBeatDecoder());
-                        pipeline.addLast(new HeartBeatCommandHandler());
+                        pipeline.addLast(new HeartBeatUdpDecoder());
+                        pipeline.addLast(new HeartBeatHandler());
                     }
                 }).localAddress(address);
     }
