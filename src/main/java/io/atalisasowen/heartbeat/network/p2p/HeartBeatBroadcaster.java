@@ -32,6 +32,7 @@ public class HeartBeatBroadcaster {
         Channel ch = bootstrap.bind(0).sync().channel();
         for (;;){
             HeartBeatCommand command = sendingQueue.take();
+            System.out.println("Getting Queue Command: " + command);
             ch.writeAndFlush(command);
         }
     }

@@ -4,6 +4,7 @@ import io.atalisasowen.heartbeat.command.HeartBeatCommand;
 import io.atalisasowen.heartbeat.network.p2p.HeartBeatBroadcaster;
 import io.atalisasowen.heartbeat.network.p2p.HeartBeatReceiver;
 import io.netty.channel.Channel;
+import io.netty.util.CharsetUtil;
 
 import java.net.InetSocketAddress;
 import java.util.UUID;
@@ -18,6 +19,7 @@ public class HeartBeatPeer {
     public static Runnable receiverThread = () -> {
         HeartBeatReceiver receiver = new HeartBeatReceiver(new InetSocketAddress(6666));
         try {
+            System.out.println("Starting Receiving Thread...");
             Channel channel = receiver.bind();
             channel.closeFuture().sync();
         } catch (InterruptedException ex) {
@@ -29,11 +31,12 @@ public class HeartBeatPeer {
 
     public static Runnable senderThread = () -> {
         try {
+            System.out.println("Starting Sending Thread...");
             Thread.sleep(1000);
-            HeartBeatCommand command1 = new HeartBeatCommand(null, "PING", UUID.randomUUID().toString());
+            HeartBeatCommand command1 = new HeartBeatCommand(null, "PINGPONG",UUID.randomUUID().toString() );
             sendingQueue.offer(command1);
             Thread.sleep(1000);
-            HeartBeatCommand command2 = new HeartBeatCommand(null, "PING", UUID.randomUUID().toString());
+            HeartBeatCommand command2 = new HeartBeatCommand(null, "PING", UUID.randomUUID().toString(), "FUUU".getBytes());
             sendingQueue.offer(command2);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -48,7 +51,7 @@ public class HeartBeatPeer {
         thread.start();
         Thread.sleep(1000L);
         HeartBeatBroadcaster beatBroadcaster = new HeartBeatBroadcaster(
-                new InetSocketAddress("255.255.255.255", 8888),
+                new InetSocketAddress("255.255.255.255", 6666),
                 sendingQueue);
         try {
             Thread thread2 = new Thread(senderThread);

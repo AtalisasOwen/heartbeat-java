@@ -16,15 +16,25 @@ public class HeartBeatDecoder extends MessageToMessageDecoder<DatagramPacket> {
         ByteBuf buf = datagramPacket.content();
         int idx1 = buf.indexOf(0, buf.readableBytes(), HeartBeatCommand.SEPARATOR);
         int idx2 = buf.indexOf(idx1+1, buf.readableBytes(), HeartBeatCommand.SEPARATOR);
-        String commandName = buf.slice(0, idx1).toString(CharsetUtil.UTF_8);
-        String commandUuid = buf.slice(idx1+1, idx2).toString(CharsetUtil.UTF_8);
-        System.out.println("idx1: " + idx1);
-        System.out.println("idx2: " + idx2);
-        System.out.println("readableBytes: " + buf.readableBytes());
+        String[] commandNameAndUuid = buf.slice(0, idx2).toString(CharsetUtil.UTF_8).split(":");
+        String commandName = commandNameAndUuid[0];
+        String commandUuid = commandNameAndUuid[1];
+//        System.out.println("idx1: " + idx1);
+//        System.out.println("idx2: " + idx2);
+//        System.out.println("readableBytes: " + buf.readableBytes());
+//        System.out.println("commandName: " + commandName);
+//        System.out.println("commandUuid: " + commandUuid);
         HeartBeatCommand command = new HeartBeatCommand(datagramPacket.sender(), commandName, commandUuid);
-        if (idx2 != buf.readableBytes()){
-            command.setData(buf.slice(idx2+1, buf.readableBytes()).array());
+        if (idx2 + 1 != buf.readableBytes()){
+            if(buf.hasArray()){ // 堆存储
+                command.setData(buf.slice(idx2+1, buf.readableBytes()).array());
+            }else{              // 直接内存，需要复制出来！
+                byte[] array = new byte[buf.readableBytes()-idx2-1];
+                buf.getBytes(idx2+1, array);
+                command.setData(array);
+            }
         }
+
         list.add(command);
     }
 }
