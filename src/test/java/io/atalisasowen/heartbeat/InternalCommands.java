@@ -1,6 +1,7 @@
 package io.atalisasowen.heartbeat;
 
 import io.atalisasowen.heartbeat.command.HeartBeatCommand;
+import io.atalisasowen.heartbeat.network.HeartBeatPeer;
 import io.atalisasowen.heartbeat.store.SimplePingStore;
 
 import java.net.InetSocketAddress;
@@ -15,10 +16,8 @@ public class InternalCommands {
             try {
                 System.out.println("Starting Sending Thread...");
                 for (;;){
-                    String uuid = UUID.randomUUID().toString();
-                    HeartBeatCommand command = new HeartBeatCommand(address1, address2, "PING", uuid);
-                    SimplePingStore.PING_COMMANDS.put(uuid, command);
-                    SimplePingStore.SENDING_QUEUE.offer(command);
+                    HeartBeatPeer peer = new HeartBeatPeer(address1);
+                    peer.send("PING", address2);
                     Thread.sleep(1000);
                 }
             } catch (InterruptedException e) {
@@ -32,13 +31,8 @@ public class InternalCommands {
             try {
                 System.out.println("Starting Sending Thread...");
                 for (;;){
-                    for (InetSocketAddress addr : addresses){
-                        String uuid = UUID.randomUUID().toString();
-                        HeartBeatCommand command = new HeartBeatCommand(address, addr, "PING", uuid);
-                        SimplePingStore.PING_COMMANDS.put(uuid, command);
-                        SimplePingStore.SENDING_QUEUE.offer(command);
-                    }
-
+                    HeartBeatPeer peer = new HeartBeatPeer(address);
+                    peer.send2("PING", addresses);
                     Thread.sleep(5000);
                 }
             } catch (InterruptedException e) {

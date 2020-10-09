@@ -15,6 +15,7 @@ public class HeartBeatPeerMultiPing {
 //        int port2 = Integer.parseInt(args[1]);
 
         InetSocketAddress address1 = new InetSocketAddress("127.0.0.1", 6666);
+
         InetSocketAddress address2 = new InetSocketAddress("127.0.0.1", 8888);
         InetSocketAddress address3 = new InetSocketAddress("127.0.0.1", 8889);
         InetSocketAddress address4 = new InetSocketAddress("127.0.0.1", 8890);
