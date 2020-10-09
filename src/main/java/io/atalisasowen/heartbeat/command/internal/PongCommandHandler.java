@@ -7,8 +7,8 @@ import io.atalisasowen.heartbeat.store.SimplePingStore;
 public class PongCommandHandler implements HeartBeatCommandHandler {
     @Override
     public void handleCommand(HeartBeatCommand command) {
-        HeartBeatCommand ping = SimplePingStore.PING_COMMANDS.get(command.getCommandUuid());
-        System.out.println(System.currentTimeMillis() + ": Getting Pong from " + ping.getDstAddr());
+        HeartBeatCommand ping = SimplePingStore.getHistoryCommand(command.getCommandUuid());
+        // System.out.println(System.currentTimeMillis() + ": Getting Pong from " + ping.getDstAddr());
         SimplePingStore.addAliveNode(ping.getDstAddr());
     }
 }

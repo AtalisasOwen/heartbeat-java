@@ -3,6 +3,7 @@ package io.atalisasowen.heartbeat.network;
 import io.atalisasowen.heartbeat.command.HeartBeatCommand;
 import io.atalisasowen.heartbeat.command.SimpleHeartBeatCommand;
 import io.atalisasowen.heartbeat.store.SimplePingStore;
+import io.atalisasowen.heartbeat.utils.Utils;
 
 import java.net.InetSocketAddress;
 import java.util.Arrays;
@@ -18,17 +19,11 @@ public class HeartBeatPeer {
         this.address = address;
     }
 
-    public InetSocketAddress transformAddr(String addr){
-        String[] ss = addr.split(":");
-        String ip = ss[0];
-        int port = Integer.parseInt(ss[1]);
-        return new InetSocketAddress(ip, port);
-    }
 
     public void send(SimpleHeartBeatCommand command, List<String> peers){
         List<HeartBeatCommand> commands = peers.stream().map(s -> {
             String uuid = UUID.randomUUID().toString();
-            return new HeartBeatCommand(address,transformAddr(s),  command.getCommandName(), uuid, command.getData());
+            return new HeartBeatCommand(address, Utils.stringToSocketAddress(s),  command.getCommandName(), uuid, command.getData());
         }).collect(Collectors.toList());
 
         sendAllCommands(commands);
@@ -37,7 +32,7 @@ public class HeartBeatPeer {
     public void send(String command, List<String> peers){
         List<HeartBeatCommand> commands = peers.stream().map(s -> {
             String uuid = UUID.randomUUID().toString();
-            return new HeartBeatCommand(address,transformAddr(s),  command, uuid);
+            return new HeartBeatCommand(address,Utils.stringToSocketAddress(s),  command, uuid);
         }).collect(Collectors.toList());
 
         sendAllCommands(commands);
@@ -74,8 +69,7 @@ public class HeartBeatPeer {
 
     private void sendAllCommands(List<HeartBeatCommand> commands){
         commands.forEach((s) ->{
-            SimplePingStore.PING_COMMANDS.put(s.getCommandUuid(), s);
-            SimplePingStore.SENDING_QUEUE.add(s);
+            SimplePingStore.sendAndSave(s);
 
         });
 

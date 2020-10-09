@@ -33,7 +33,7 @@ public class InternalCommands {
                 for (;;){
                     HeartBeatPeer peer = new HeartBeatPeer(address);
                     peer.send2("PING", addresses);
-                    Thread.sleep(5000);
+                    Thread.sleep(2000);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

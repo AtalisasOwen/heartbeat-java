@@ -23,8 +23,7 @@ public class HeartBeatPeer {
                 for (;;){
                     String uuid = UUID.randomUUID().toString();
                     HeartBeatCommand command = new HeartBeatCommand(address1, address2, "PING", uuid);
-                    SimplePingStore.PING_COMMANDS.put(uuid, command);
-                    SimplePingStore.SENDING_QUEUE.offer(command);
+                    SimplePingStore.sendAndSave(command);
                     Thread.sleep(1000);
                 }
             } catch (InterruptedException e) {
