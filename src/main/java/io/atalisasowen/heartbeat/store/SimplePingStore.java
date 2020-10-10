@@ -19,14 +19,20 @@ public class SimplePingStore {
     private final static ConcurrentHashMap<String, Object> DEAD_NODES = new ConcurrentHashMap<>();
     private final static Object VALUE = new Object();
 
+    private SimplePingStore(){}
+
     public static void sendAndSave(HeartBeatCommand command){
         SimplePingStore.PING_COMMANDS.put(command.getCommandUuid(), command);
         SimplePingStore.SENDING_QUEUE.add(command);
 
     }
 
+    public static HeartBeatCommand take() throws InterruptedException {
+        return SENDING_QUEUE.take();
+    }
+
     public static void send(HeartBeatCommand command){
-        SimplePingStore.SENDING_QUEUE.add(command);
+        SimplePingStore.SENDING_QUEUE.offer(command);
     }
 
     public static HeartBeatCommand getHistoryCommand(String uuid){

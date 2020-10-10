@@ -70,7 +70,6 @@ public class HeartBeatPeer {
     private void sendAllCommands(List<HeartBeatCommand> commands){
         commands.forEach((s) ->{
             SimplePingStore.sendAndSave(s);
-
         });
 
     }

@@ -51,7 +51,7 @@ public class HeartBeatServer {
 
         new Thread(clearDeadThread).start();
 
-        HeartBeatUdpSender beatBroadcaster = new HeartBeatUdpSender(SimplePingStore.SENDING_QUEUE);
+        HeartBeatUdpSender beatBroadcaster = new HeartBeatUdpSender();
         try {
             beatBroadcaster.run();
         } finally {

@@ -9,6 +9,6 @@ public class PingCommandHandler implements HeartBeatCommandHandler {
     public void handleCommand(HeartBeatCommand command) {
         System.out.println(System.currentTimeMillis() + ": Getting Ping from " + command.getSrcAddr());
         HeartBeatCommand pong = new HeartBeatCommand(command.getSrcAddr(), command.getSrcAddr(), "PONG", command.getCommandUuid());
-        SimplePingStore.SENDING_QUEUE.offer(pong);
+        SimplePingStore.send(pong);
     }
 }

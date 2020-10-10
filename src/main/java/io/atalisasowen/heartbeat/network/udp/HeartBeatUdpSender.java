@@ -2,6 +2,7 @@ package io.atalisasowen.heartbeat.network.udp;
 
 import io.atalisasowen.heartbeat.command.HeartBeatCommand;
 import io.atalisasowen.heartbeat.codec.HeartBeatUdpEncoder;
+import io.atalisasowen.heartbeat.store.SimplePingStore;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
@@ -15,11 +16,9 @@ import java.util.concurrent.BlockingDeque;
 public class HeartBeatUdpSender {
     private final EventLoopGroup group;
     private final Bootstrap bootstrap;
-    private final BlockingDeque<HeartBeatCommand> sendingQueue;
 
 
-    public HeartBeatUdpSender(BlockingDeque<HeartBeatCommand> sendingQueue) {
-        this.sendingQueue = sendingQueue;
+    public HeartBeatUdpSender() {
         this.group = new NioEventLoopGroup();
         this.bootstrap = new Bootstrap();
         bootstrap.group(group)
@@ -31,7 +30,7 @@ public class HeartBeatUdpSender {
     public void run() throws Exception{
         Channel ch = bootstrap.bind(0).sync().channel();
         for (;;){
-            HeartBeatCommand command = sendingQueue.take();
+            HeartBeatCommand command = SimplePingStore.take();
             // System.out.println("Sending " + command);
             ch.writeAndFlush(command);
             // ch.read();
