@@ -15,7 +15,7 @@ public class HeartBeatUdpEncoder extends MessageToMessageEncoder<HeartBeatComman
         byte[] commandName = heartBeatCommand.getCommandName().getBytes(CharsetUtil.UTF_8);
         byte[] uuid = heartBeatCommand.getCommandUuid().getBytes(CharsetUtil.UTF_8);
         byte[] hostname = heartBeatCommand.getSrcAddr().getHostString().getBytes(CharsetUtil.UTF_8);
-        int port = heartBeatCommand.getSrcAddr().getPort();
+        byte[] port = String.valueOf(heartBeatCommand.getSrcAddr().getPort()).getBytes(CharsetUtil.UTF_8);
         byte[] data = heartBeatCommand.getData();
         ByteBuf buf = null;
         if (data != null){
@@ -27,7 +27,7 @@ public class HeartBeatUdpEncoder extends MessageToMessageEncoder<HeartBeatComman
             buf.writeByte(HeartBeatCommand.SEPARATOR);
             buf.writeBytes(hostname);
             buf.writeByte(HeartBeatCommand.SEPARATOR);
-            buf.writeInt(port);
+            buf.writeBytes(port);
             buf.writeByte(HeartBeatCommand.SEPARATOR);
             buf.writeBytes(data);
         } else {
@@ -39,7 +39,7 @@ public class HeartBeatUdpEncoder extends MessageToMessageEncoder<HeartBeatComman
             buf.writeByte(HeartBeatCommand.SEPARATOR);
             buf.writeBytes(hostname);
             buf.writeByte(HeartBeatCommand.SEPARATOR);
-            buf.writeInt(port);
+            buf.writeBytes(port);
             buf.writeByte(HeartBeatCommand.SEPARATOR);
         }
         list.add(new DatagramPacket(buf, heartBeatCommand.getDstAddr()));
